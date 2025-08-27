@@ -19,12 +19,12 @@
 
     .page-container {
       width: 100%;
-      max-width: 600px; /* أكبر قليلاً */
+      max-width: 600px;
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       border-radius: 20px;
-      padding: 25px; /* أكبر قليلاً */
+      padding: 25px;
       box-shadow: 0 0 25px #0ff8;
     }
 
@@ -124,12 +124,17 @@
 
     @media (max-width: 480px) {
       h2 { font-size: 18px; }
-      .step { font-size: 13px; padding: 10px 12px; }
-      .check { font-size: 16px; }
-      .final-message { font-size: 14px; }
-      .final-buttons a { font-size: 13px; padding: 8px; }
-      .progress-container { height: 16px; }
-      .loading { width: 12px; height: 12px; }
+      .step { font-size: 14px; padding: 14px 16px; }
+      .check { font-size: 18px; }
+      .final-message { font-size: 15px; }
+      .final-buttons a { font-size: 15px; padding: 12px; }
+      .progress-container { height: 18px; }
+      .loading { width: 14px; height: 14px; }
+      .top-image-container img {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+      }
     }
   </style>
 </head>
