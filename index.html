@@ -122,6 +122,14 @@
     .final-buttons a.btn-guide { background-color: #06c !important; }
     .final-buttons a:hover { transform: scale(1.02); }
 
+    /* منع النسخ والتحديد فقط للأزرار المحمية */
+    .protected-link {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
     /* تحسينات للهواتف */
     @media (max-width: 480px) {
       h2 { font-size: 22px; }
@@ -164,29 +172,30 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
+  <!-- الخطوات -->
   <div id="step1" class="step active">
-    <a href="#" onclick="completeStep(1, 'https://www.youtube.com/@MRGAMESFF-k3q'); return false;">
+    <a href="#" class="protected-link" onclick="completeStep(1, 'https://www.youtube.com/@MRGAMESFF-k3q'); return false;">
       <span>📺🔔 اضغط هنا وقم بالاشتراك في القناة 1 وتفعيل زر الجرس</span>
       <span id="check1">➡️</span>
     </a>
   </div>
 
   <div id="step2" class="step">
-    <a href="#" onclick="completeStep(2, 'https://www.youtube.com/@DarkPanda-DP'); return false;">
+    <a href="#" class="protected-link" onclick="completeStep(2, 'https://www.youtube.com/@DarkPanda-DP'); return false;">
       <span>📺🔔 اضغط هنا وقم بالاشتراك في القناة 2 وتفعيل زر الجرس</span>
       <span id="check2">➡️</span>
     </a>
   </div>
 
   <div id="step3" class="step">
-    <a href="#" onclick="completeStep(3); return false;">
+    <a href="#" class="protected-link" onclick="completeStep(3); return false;">
       <span>👍💬 اضغط هنا وقم بعمل لايك وتعليق مميز للفيديو الذي ستراه</span>
       <span id="check3">➡️</span>
     </a>
   </div>
 
   <div id="step4" class="step">
-    <a href="#" onclick="completeStep(4, 'https://www.youtube.com/@DarkPandaff-1'); return false;">
+    <a href="#" class="protected-link" onclick="completeStep(4, 'https://www.youtube.com/@DarkPandaff-1'); return false;">
       <span>📺🔔 اضغط هنا وقم بالاشتراك في القناة 3 وتفعيل زر الجرس</span>
       <span id="check4">➡️</span>
     </a>
@@ -195,12 +204,13 @@
   <div class="final-section">
     <div id="finalMessage" class="final-message">❌ نفّذ الخطوات أولاً لكي يتم فتح روابط التحميل</div>
     <div class="final-buttons">
-      <a id="btnDownload" href="#" onclick="goToDownload(); return false;">🔒 لتحميل اقوي سكريبت فري فاير اخر تحديث اضغط هنا</a>
+      <a id="btnDownload" href="#" target="_blank">🔒 لتحميل اقوي سكريبت فري فاير اخر تحديث اضغط هنا</a>
     </div>
   </div>
 </div>
 
 <script>
+
   document.getElementById("mainImage").addEventListener("contextmenu", function(e) { e.preventDefault(); });
   const STEP_EXPIRY_MS = 365 * 24 * 60 * 60 * 1000;
   const step3Links = ["https://youtu.be/rETE456KAyk"];
@@ -247,20 +257,6 @@
 
     unlockButtons();
     updateProgressBar();
-
-    // ✅ بعد التحديث، انزل للخطوة الأولى الغير مكتملة
-    let firstIncomplete = null;
-    for (let i = 1; i <= 4; i++) {
-      if (!document.getElementById("step" + i).classList.contains("completed")) {
-        firstIncomplete = document.getElementById("step" + i);
-        break;
-      }
-    }
-    if (firstIncomplete) {
-      setTimeout(() => {
-        firstIncomplete.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 600);
-    }
   };
 
   function saveStepState(step) {
@@ -304,12 +300,6 @@
 
       unlockButtons();
       updateProgressBar();
-
-      if (nextStep) {
-        setTimeout(() => {
-          nextStep.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 500);
-      }
     }, 10000);
   }
 
@@ -318,22 +308,24 @@
       [1, 2].every(i => document.getElementById("step" + i).classList.contains("completed")) &&
       document.getElementById("step3").classList.contains("completed") &&
       document.getElementById("step4").classList.contains("completed");
+      
     if (allCompleted) {
       document.getElementById("finalMessage").innerText = "✅ تم تنفيذ كل الخطوات بنجاح";
       document.getElementById("finalMessage").style.color = "lime";
-      document.getElementById("btnDownload").classList.add("active");
 
-      setTimeout(() => {
-        document.getElementById("btnDownload").scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 800);
+      const btn = document.getElementById("btnDownload");
+      btn.classList.add("active");
+      btn.href = downloadURL;
+      btn.innerText = btnDownloadText;
+      btn.setAttribute("target", "_blank");
 
       if (!document.getElementById("btnGuide")) {
         const guideBtn = document.createElement("a");
         guideBtn.id = "btnGuide";
-        guideBtn.href = "https://youtu.be/7lC4HYzDJJ4";
+        guideBtn.href = guideURL;
         guideBtn.target = "_blank";
         guideBtn.className = "btn-guide active";
-        guideBtn.innerText = "❓ إذا واجهت أي مشكلة في التحميل اضغط هنا";
+        guideBtn.innerText = btnGuideText;
         document.querySelector(".final-buttons").appendChild(guideBtn);
       }
     }
@@ -348,7 +340,23 @@
     document.getElementById("progressBar").style.width = (done / 4) * 100 + "%";
   }
 
-  function goToDownload() { window.open("https://xdabo.com/zq8zcgq", "_blank"); }
+  // -----------------------------
+  // 🔽 الروابط وأسماء الأزرار للتعديل السهل
+  const btnDownloadText = "🔒 لتحميل اقوي سكريبت فري فاير اخر تحديث اضغط هنا";
+  const downloadURL     = "https://xdabo.com/zq8zcgq";
+
+  const btnGuideText    = "❓ إذا واجهت أي مشكلة في التحميل اضغط هنا";
+  const guideURL        = "https://youtu.be/7lC4HYzDJJ4";
+  // -----------------------------
+
+  // ✅ تعطيل كلك يمين + الضغط المطوّل للأزرار الأربعة الأولى فقط
+  document.querySelectorAll(".protected-link").forEach(el => {
+    el.addEventListener("contextmenu", e => e.preventDefault()); 
+    el.addEventListener("touchstart", e => {
+      e.preventDefault();
+    }, { passive: false });
+  });
+
 </script>
 
 </body>
