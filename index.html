@@ -122,17 +122,31 @@
     .final-buttons a.btn-guide { background-color: #06c !important; }
     .final-buttons a:hover { transform: scale(1.02); }
 
-    /* تحسينات للهواتف: تكبير الصورة والأزرار لتكون كلها بعرض موحّد */
+    /* تحسينات للهواتف: جعل الأزرار والصورة نفس العرض بشكل متناسق */
     @media (max-width: 480px) {
-      h2 { font-size: 24px; }
-      .step { font-size: 18px; padding: 22px 24px; border-radius: 20px; width: 100%; }
-      .step a { width: 100%; } /* الأزرار داخل الخطوات بعرض كامل */
-      .check { font-size: 24px; }
+      h2 { font-size: 22px; }
+      .step { 
+        font-size: 17px; 
+        padding: 18px; 
+        border-radius: 18px; 
+        width: 100%; 
+      }
+      .check { font-size: 22px; }
       .final-message { font-size: 18px; }
-      .final-buttons a { font-size: 18px; padding: 18px; border-radius: 20px; width: 100%; box-sizing: border-box; }
+      .final-buttons a { 
+        font-size: 17px; 
+        padding: 16px; 
+        border-radius: 18px; 
+        width: 100%; 
+      }
       .progress-container { height: 24px; }
       .loading { width: 18px; height: 18px; }
-      .top-image-container img { width: 100%; height: auto; max-height: none; }
+      .top-image-container img {
+        width: 100%;
+        height: auto;
+        max-height: 380px; /* مش كبير أوي */
+        object-fit: cover;
+      }
     }
   </style>
 </head>
