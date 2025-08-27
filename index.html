@@ -122,19 +122,17 @@
     .final-buttons a.btn-guide { background-color: #06c !important; }
     .final-buttons a:hover { transform: scale(1.02); }
 
+    /* تحسينات للهواتف: تكبير الصورة والأزرار لتكون كلها بعرض موحّد */
     @media (max-width: 480px) {
-      h2 { font-size: 18px; }
-      .step { font-size: 14px; padding: 14px 16px; }
-      .check { font-size: 18px; }
-      .final-message { font-size: 15px; }
-      .final-buttons a { font-size: 15px; padding: 12px; }
-      .progress-container { height: 18px; }
-      .loading { width: 14px; height: 14px; }
-      .top-image-container img {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-      }
+      h2 { font-size: 24px; }
+      .step { font-size: 18px; padding: 22px 24px; border-radius: 20px; width: 100%; }
+      .step a { width: 100%; } /* الأزرار داخل الخطوات بعرض كامل */
+      .check { font-size: 24px; }
+      .final-message { font-size: 18px; }
+      .final-buttons a { font-size: 18px; padding: 18px; border-radius: 20px; width: 100%; box-sizing: border-box; }
+      .progress-container { height: 24px; }
+      .loading { width: 18px; height: 18px; }
+      .top-image-container img { width: 100%; height: auto; max-height: none; }
     }
   </style>
 </head>
@@ -152,7 +150,6 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <!-- الخطوات -->
   <div id="step1" class="step active">
     <a href="#" onclick="completeStep(1, 'https://www.youtube.com/@MRGAMESFF-k3q'); return false;">
       <span>📺🔔 اضغط هنا وقم بالاشتراك في القناة 1 وتفعيل زر الجرس</span>
