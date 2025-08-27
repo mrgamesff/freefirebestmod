@@ -122,39 +122,17 @@
     .final-buttons a.btn-guide { background-color: #06c !important; }
     .final-buttons a:hover { transform: scale(1.02); }
 
-    /* منع النسخ والتحديد فقط للأزرار المحمية */
-    .protected-link {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+    .protected-link { user-select: none; }
 
-    /* تحسينات للهواتف */
     @media (max-width: 480px) {
       h2 { font-size: 22px; }
-      .step { 
-        font-size: 17px; 
-        padding: 18px; 
-        border-radius: 18px; 
-        width: 100%; 
-      }
+      .step { font-size: 17px; padding: 18px; border-radius: 18px; width: 100%; }
       .check { font-size: 22px; }
       .final-message { font-size: 18px; }
-      .final-buttons a { 
-        font-size: 17px; 
-        padding: 16px; 
-        border-radius: 18px; 
-        width: 100%; 
-      }
+      .final-buttons a { font-size: 17px; padding: 16px; border-radius: 18px; width: 100%; }
       .progress-container { height: 24px; }
       .loading { width: 18px; height: 18px; }
-      .top-image-container img {
-        width: 100%;
-        height: auto;
-        max-height: 380px;
-        object-fit: cover;
-      }
+      .top-image-container img { width: 100%; height: auto; max-height: 380px; object-fit: cover; }
     }
   </style>
 </head>
@@ -172,7 +150,6 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
-  <!-- الخطوات -->
   <div id="step1" class="step active">
     <a href="#" class="protected-link" onclick="completeStep(1, 'https://www.youtube.com/@MRGAMESFF-k3q'); return false;">
       <span>📺🔔 اضغط هنا وقم بالاشتراك في القناة 1 وتفعيل زر الجرس</span>
@@ -210,7 +187,6 @@
 </div>
 
 <script>
-
   document.getElementById("mainImage").addEventListener("contextmenu", function(e) { e.preventDefault(); });
   const STEP_EXPIRY_MS = 365 * 24 * 60 * 60 * 1000;
   const step3Links = ["https://youtu.be/rETE456KAyk"];
@@ -218,52 +194,33 @@
   const step4StorageKey = "step4States_v54566665_page55599955";
   const stepsStateKey = "stepsState";
 
+  const btnDownloadText = "🔓 لتحميل اقوي سكريبت فري فاير اخر تحديث اضغط هنا";
+  const downloadURL     = "https://xdabo.com/zq8zcgq";
+  const btnGuideText    = "❓ إذا واجهت أي مشكلة في التحميل اضغط هنا";
+  const guideURL        = "https://youtu.be/7lC4HYzDJJ4";
+
   function isStateExpired(savedState) {
     if (!savedState.timestamp) return true;
     return Date.now() - savedState.timestamp > STEP_EXPIRY_MS;
   }
-
-  window.onload = () => {
-    const savedState = JSON.parse(localStorage.getItem(stepsStateKey) || "{}");
-    const step3State = JSON.parse(localStorage.getItem(step3StorageKey) || "{}");
-    const step4State = JSON.parse(localStorage.getItem(step4StorageKey) || "{}");
-
-    if (isStateExpired(savedState)) {
-      localStorage.removeItem(stepsStateKey);
-      localStorage.removeItem(step3StorageKey);
-      localStorage.removeItem(step4StorageKey);
-      return;
-    }
-
-    for (let i = 1; i <= 2; i++) {
-      if (savedState["step" + i]) {
-        document.getElementById("step" + i).classList.add("completed");
-        document.getElementById("check" + i).innerText = "✅";
-        const nextStep = document.getElementById("step" + (i + 1));
-        if (nextStep) nextStep.classList.add("active");
-      }
-    }
-
-    if (savedState.step2) document.getElementById("step3").classList.add("active");
-    if (step3State.completed) {
-      document.getElementById("step3").classList.add("completed");
-      document.getElementById("check3").innerText = "✅";
-      document.getElementById("step4").classList.add("active");
-    }
-    if (step4State.completed) {
-      document.getElementById("step4").classList.add("completed");
-      document.getElementById("check4").innerText = "✅";
-    }
-
-    unlockButtons();
-    updateProgressBar();
-  };
 
   function saveStepState(step) {
     const current = JSON.parse(localStorage.getItem(stepsStateKey) || "{}");
     current["step" + step] = true;
     current.timestamp = Date.now();
     localStorage.setItem(stepsStateKey, JSON.stringify(current));
+  }
+
+  // scroll لأي عنصر
+  function scrollToStep(step) {
+    const el = document.getElementById("step" + step);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  // scroll للأزرار النهائية
+  function scrollToFinalButtons() {
+    const el = document.querySelector(".final-buttons");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function completeStep(step, url = null) {
@@ -300,6 +257,9 @@
 
       unlockButtons();
       updateProgressBar();
+
+      if (nextStep) scrollToStep(step + 1);
+      else if (step === 4) scrollToFinalButtons();
     }, 10000);
   }
 
@@ -340,24 +300,58 @@
     document.getElementById("progressBar").style.width = (done / 4) * 100 + "%";
   }
 
-  // -----------------------------
-  // 🔽 الروابط وأسماء الأزرار للتعديل السهل
-  const btnDownloadText = "🔒 لتحميل اقوي سكريبت فري فاير اخر تحديث اضغط هنا";
-  const downloadURL     = "https://xdabo.com/zq8zcgq";
+  window.onload = () => {
+    const savedState = JSON.parse(localStorage.getItem(stepsStateKey) || "{}");
+    const step3State = JSON.parse(localStorage.getItem(step3StorageKey) || "{}");
+    const step4State = JSON.parse(localStorage.getItem(step4StorageKey) || "{}");
 
-  const btnGuideText    = "❓ إذا واجهت أي مشكلة في التحميل اضغط هنا";
-  const guideURL        = "https://youtu.be/7lC4HYzDJJ4";
-  // -----------------------------
+    if (isStateExpired(savedState)) {
+      localStorage.removeItem(stepsStateKey);
+      localStorage.removeItem(step3StorageKey);
+      localStorage.removeItem(step4StorageKey);
+      return;
+    }
 
-  // ✅ تعطيل كلك يمين + الضغط المطوّل للأزرار الأربعة الأولى فقط
+    for (let i = 1; i <= 2; i++) {
+      if (savedState["step" + i]) {
+        document.getElementById("step" + i).classList.add("completed");
+        document.getElementById("check" + i).innerText = "✅";
+        const nextStep = document.getElementById("step" + (i + 1));
+        if (nextStep) nextStep.classList.add("active");
+      }
+    }
+
+    if (savedState.step2) document.getElementById("step3").classList.add("active");
+    if (step3State.completed) {
+      document.getElementById("step3").classList.add("completed");
+      document.getElementById("check3").innerText = "✅";
+      document.getElementById("step4").classList.add("active");
+    }
+    if (step4State.completed) {
+      document.getElementById("step4").classList.add("completed");
+      document.getElementById("check4").innerText = "✅";
+    }
+
+    unlockButtons();
+    updateProgressBar();
+
+    // scroll للخطوة غير المنفذة أو للأزرار النهائية
+    for (let i = 1; i <= 4; i++) {
+      if (!document.getElementById("step" + i).classList.contains("completed")) {
+        scrollToStep(i);
+        return;
+      }
+    }
+    scrollToFinalButtons();
+  };
+
+  // تعطيل كلك يمين + الضغط المطوّل للأزرار الأربعة الأولى فقط
   document.querySelectorAll(".protected-link").forEach(el => {
     el.addEventListener("contextmenu", e => e.preventDefault()); 
-    el.addEventListener("touchstart", e => {
-      e.preventDefault();
-    }, { passive: false });
+    el.addEventListener("touchstart", e => { e.preventDefault(); }, { passive: false });
   });
-
 </script>
 
 </body>
 </html>
+
