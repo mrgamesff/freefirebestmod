@@ -122,7 +122,7 @@
     .final-buttons a.btn-guide { background-color: #06c !important; }
     .final-buttons a:hover { transform: scale(1.02); }
 
-    /* تحسينات للهواتف: جعل الأزرار والصورة نفس العرض بشكل متناسق */
+    /* تحسينات للهواتف */
     @media (max-width: 480px) {
       h2 { font-size: 22px; }
       .step { 
@@ -144,7 +144,7 @@
       .top-image-container img {
         width: 100%;
         height: auto;
-        max-height: 380px; /* مش كبير أوي */
+        max-height: 380px;
         object-fit: cover;
       }
     }
@@ -241,11 +241,30 @@
     setTimeout(() => {
       document.getElementById("step" + step).classList.add("completed");
       check.innerText = "✅";
-      if (step === 3) { localStorage.setItem(step3StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); document.getElementById("step4").classList.add("active"); } 
-      else if (step === 4) { localStorage.setItem(step4StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); } 
-      else { saveStepState(step); const nextStep = document.getElementById("step" + (step + 1)); if (nextStep) nextStep.classList.add("active"); }
+      let nextStep = null;
+
+      if (step === 3) { 
+        localStorage.setItem(step3StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
+        nextStep = document.getElementById("step4");
+        if (nextStep) nextStep.classList.add("active"); 
+      } 
+      else if (step === 4) { 
+        localStorage.setItem(step4StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
+      } 
+      else { 
+        saveStepState(step); 
+        nextStep = document.getElementById("step" + (step + 1)); 
+        if (nextStep) nextStep.classList.add("active"); 
+      }
 
       unlockButtons(); updateProgressBar();
+
+      // ✅ تمرير تلقائي للخطوة التالية
+      if (nextStep) {
+        setTimeout(() => {
+          nextStep.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 500);
+      }
     }, 10000);
   }
 
@@ -258,6 +277,12 @@
       document.getElementById("finalMessage").innerText = "✅ تم تنفيذ كل الخطوات بنجاح";
       document.getElementById("finalMessage").style.color = "lime";
       document.getElementById("btnDownload").classList.add("active");
+
+      // ✅ تمرير تلقائي لزر التحميل
+      setTimeout(() => {
+        document.getElementById("btnDownload").scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 800);
+
       if (!document.getElementById("btnGuide")) {
         const guideBtn = document.createElement("a");
         guideBtn.id = "btnGuide";
