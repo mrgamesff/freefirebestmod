@@ -233,40 +233,54 @@
   function saveStepState(step) { const current = JSON.parse(localStorage.getItem(stepsStateKey) || "{}"); current["step" + step] = true; current.timestamp = Date.now(); localStorage.setItem(stepsStateKey, JSON.stringify(current)); }
 
   function completeStep(step, url = null) {
-    const check = document.getElementById("check" + step);
-    check.innerHTML = '<span class="loading"></span>';
-    if (step === 3) { const selected = step3Links[Math.floor(Math.random() * step3Links.length)]; window.open(selected, "_blank"); } 
-    else if (url) window.open(url, "_blank");
+  const check = document.getElementById("check" + step);
 
-    setTimeout(() => {
-      document.getElementById("step" + step).classList.add("completed");
-      check.innerText = "✅";
-      let nextStep = null;
+  // 👈 لو الخطوة منتهية قبل كده
+  const alreadyCompleted = document.getElementById("step" + step).classList.contains("completed");
 
-      if (step === 3) { 
-        localStorage.setItem(step3StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
-        nextStep = document.getElementById("step4");
-        if (nextStep) nextStep.classList.add("active"); 
-      } 
-      else if (step === 4) { 
-        localStorage.setItem(step4StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
-      } 
-      else { 
-        saveStepState(step); 
-        nextStep = document.getElementById("step" + (step + 1)); 
-        if (nextStep) nextStep.classList.add("active"); 
-      }
-
-      unlockButtons(); updateProgressBar();
-
-      // ✅ تمرير تلقائي للخطوة التالية
-      if (nextStep) {
-        setTimeout(() => {
-          nextStep.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 500);
-      }
-    }, 10000);
+  // فتح الرابط دايمًا (حتى لو مكتمل)
+  if (step === 3) { 
+    const selected = step3Links[Math.floor(Math.random() * step3Links.length)];
+    window.open(selected, "_blank"); 
+  } else if (url) {
+    window.open(url, "_blank");
   }
+
+  // لو كانت مكتملة من قبل → ما نعملش أي تغيير ولا تمرير
+  if (alreadyCompleted) return;
+
+  check.innerHTML = '<span class="loading"></span>';
+
+  setTimeout(() => {
+    document.getElementById("step" + step).classList.add("completed");
+    check.innerText = "✅";
+    let nextStep = null;
+
+    if (step === 3) { 
+      localStorage.setItem(step3StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
+      nextStep = document.getElementById("step4");
+      if (nextStep) nextStep.classList.add("active"); 
+    } else if (step === 4) { 
+      localStorage.setItem(step4StorageKey, JSON.stringify({ completed: true, timestamp: Date.now() })); 
+    } else { 
+      saveStepState(step); 
+      nextStep = document.getElementById("step" + (step + 1)); 
+      if (nextStep) nextStep.classList.add("active"); 
+    }
+
+    unlockButtons();
+    updateProgressBar();
+
+    // ✅ التمرير فقط أول مرة
+    if (nextStep) {
+      setTimeout(() => {
+        nextStep.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 500);
+    }
+  }, 10000);
+}
+
+
 
   function unlockButtons() {
     const allCompleted =
